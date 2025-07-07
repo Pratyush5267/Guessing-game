@@ -1,29 +1,33 @@
 #!/bin/bash
  
-# Function to get total number of regular files (including hidden) in current directory
-function get_file_count {
+# Function to count all regular files (including hidden) in the current directory
+get_file_count() {
   find . -maxdepth 1 -type f | wc -l
 }
  
 echo "Welcome to the Guessing Game!"
-echo "Can you guess how many files are in the current directory?"
-echo "(Note: It includes hidden files too!)"
+echo "Your task is to guess how many files are in the current directory."
+echo "(Note: This includes hidden files, but only regular files — not directories.)"
  
-# Actual file count
+# Actual number of files
 actual=$(get_file_count)
-guess=-1
+guess=""
  
-# Loop until user guesses correctly
-while [[ $guess -ne $actual ]]
+# Loop until the correct guess is made
+while [[ "$guess" != "$actual" ]]
 do
   read -p "Enter your guess: " guess
-  if ! [[ $guess =~ ^[0-9]+$ ]]; then
-    echo "Please enter a valid number."
-  elif [[ $guess -lt $actual ]]; then
+ 
+  # Validate that input is a number
+  if ! [[ "$guess" =~ ^[0-9]+$ ]]; then
+    echo "Invalid input. Please enter a numeric value."
+  elif [[ "$guess" -lt "$actual" ]]; then
     echo "Too low!"
-  elif [[ $guess -gt $actual ]]; then
+    echo "Please try again."
+  elif [[ "$guess" -gt "$actual" ]]; then
     echo "Too high!"
+    echo "Please try again."
   else
-    echo "Congratulations! You guessed it right."
+    echo "Congratulations! You guessed it right. There are $actual files."
   fi
 done
